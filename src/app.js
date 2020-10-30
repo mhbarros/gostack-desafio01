@@ -1,7 +1,8 @@
-const express = require("express");
-const cors = require("cors");
+const express      = require("express");
+const cors         = require("cors");
+const { v4: uuid } = require('uuid');
 
-const { v4: uuid, validate: isUuid } = require('uuid');
+const {validateUUID: validateUUIDMiddleware} = require("./validator/uuid");
 
 const app = express();
 
@@ -13,6 +14,17 @@ const repositories = [];
 app.get("/repositories", (req, res) => {
   res.json(repositories);
 });
+
+app.get("/repositories/:id", (req, res) => {
+  const {id} = req.params;
+
+  const repository = repositories.find(rep => rep.id === id);
+  if(!repository){
+    return res.status(400).json({msg: 'Repository not found'});
+  }
+
+  return res.json(repository);
+})
 
 app.post("/repositories", (req, res) => {
   const {title, url, techs} = req.body;
@@ -31,13 +43,9 @@ app.post("/repositories", (req, res) => {
   res.json(newRepository);
 });
 
-app.put("/repositories/:id", (req, res) => {
+app.put("/repositories/:id", validateUUIDMiddleware, (req, res) => {
   const {id} = req.params;
   const {title, url, techs} = req.body;
-
-  if(!id){
-    return res.status(400).json({msg: 'Invalid repository id'});
-  }
 
   const newRepository = {
     id,
@@ -60,12 +68,8 @@ app.put("/repositories/:id", (req, res) => {
   res.json(newRepository);
 });
 
-app.delete("/repositories/:id", (req, res) => {
+app.delete("/repositories/:id", validateUUIDMiddleware, (req, res) => {
   const {id} = req.params;
-
-  if(!id){
-    return res.status(400).json({msg: 'Invalid repository id'});
-  }
 
   const repository = repositories.findIndex(rep => rep.id === id);
 
@@ -78,11 +82,8 @@ app.delete("/repositories/:id", (req, res) => {
   res.status(204).send();
 });
 
-app.post("/repositories/:id/like", (req, res) => {
+app.post("/repositories/:id/like", validateUUIDMiddleware, (req, res) => {
   const {id} = req.params;
-  if(!id){
-    return res.status(400).json({msg: 'Invalid repository id'});
-  }
 
   const repositoryIndex = repositories.findIndex(rep => rep.id === id);
   if(repositoryIndex < 0){
