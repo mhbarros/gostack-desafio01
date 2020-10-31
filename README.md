@@ -2,7 +2,7 @@
 
 # Desafio 01 GoStack
 Este é o repositório do desafio nº1 do bootcamp GoStack, da **Rocketseat**. <br/>
-[Clique aqui](https://github.com/rocketseat-education/bootcamp-gostack-desafios/tree/master/desafio-conceitos-nodejs) para acessar o link do desafio.
+<a href="https://github.com/rocketseat-education/bootcamp-gostack-desafios/tree/master/desafio-conceitos-nodejs" target="_blank">Clique aqui</a> para acessar o link do desafio.
 
 # Incrementos ao desafio
 - Rota para buscar repositório por ID
